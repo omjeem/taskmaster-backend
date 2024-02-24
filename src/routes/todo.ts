@@ -15,9 +15,6 @@ todoRouter.get("/", middleware, async (req: any, res: any) => {
     const endDate = new Date();
     endDate.setHours(23, 59, 59, 999);
 
-    startDate.setMinutes(startDate.getMinutes() - 330);
-    endDate.setMinutes(endDate.getMinutes() - 330);
-
 
     const todo = await prisma.todo.findMany({
         where: {
@@ -62,12 +59,9 @@ todoRouter.post("/add", middleware, async (req: any, res: any) => {
             return res.status(500).send("Todo not created");
         }
         const startDate = new Date();
-        startDate.setHours(0, 0, 0, 0);
+        startDate.setHours(0,0,0,0);
         const endDate = new Date();
-        endDate.setHours(23, 59, 59, 999);
-
-        startDate.setMinutes(startDate.getMinutes() - 330);
-        endDate.setMinutes(endDate.getMinutes() - 330);
+        endDate.setHours(23,59,59,999);
 
         const todos = await prisma.todo.findMany({
             select: {
@@ -79,9 +73,9 @@ todoRouter.post("/add", middleware, async (req: any, res: any) => {
             },
             where: {
                 userId: req.id,
-                date: {
-                    gte: startDate,
-                    lte: endDate
+                date : {
+                    gte : startDate,
+                    lte : endDate
                 }
             }
         })
@@ -105,16 +99,10 @@ todoRouter.post("/update", middleware, async (req: any, res: any) => {
         startDate.setHours(0, 0, 0, 0);
         const endDate = new Date();
         endDate.setHours(23, 59, 59, 999);
-
-
-        startDate.setMinutes(startDate.getMinutes() - 330);
-        endDate.setMinutes(endDate.getMinutes() - 330);
-
-
         const isinsert = await prisma.todo.update({
             where: {
                 id: payLoad.id,
-                date: {
+                date : {
                     gte: startDate,
                     lte: endDate
                 }
@@ -159,15 +147,10 @@ todoRouter.post("/delete", middleware, async (req: any, res: any) => {
         startDate.setHours(0, 0, 0, 0);
         const endDate = new Date();
         endDate.setHours(23, 59, 59, 999);
-
-        startDate.setMinutes(startDate.getMinutes() - 330);
-        endDate.setMinutes(endDate.getMinutes() - 330);
-
-
         const isDelete = await prisma.todo.delete({
             where: {
-                id: id,
-                date: {
+                id: id ,
+                date : {
                     gte: startDate,
                     lte: endDate
                 }
@@ -179,9 +162,9 @@ todoRouter.post("/delete", middleware, async (req: any, res: any) => {
         const todo = await prisma.todo.findMany({
             where: {
                 userId: req.id,
-                date: {
+                date : {
                     gte: startDate,
-                    lte: endDate
+                    lte : endDate
                 }
             },
             select: {
@@ -211,10 +194,7 @@ todoRouter.post("/date", middleware, async (req: any, res: any) => {
         const endDate = new Date(specificDate);
         endDate.setHours(23, 59, 59, 999);
 
-
-        startDate.setMinutes(startDate.getMinutes() - 330);
-        endDate.setMinutes(endDate.getMinutes() - 330);
-
+       
         const todos = await prisma.todo.findMany({
             where: {
                 userId: req.id,
@@ -224,7 +204,7 @@ todoRouter.post("/date", middleware, async (req: any, res: any) => {
                 }
             },
         });
-        if (todos.length === 0) return res.status(404).send("No Todos found");
+        if(todos.length===0)return res.status(404).send("No Todos found");
         return res.status(200).send(todos);
     } catch (err) {
         return res.status(500).send("Internal server error");
