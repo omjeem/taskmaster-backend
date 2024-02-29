@@ -14,8 +14,8 @@ const prisma = new PrismaClient();
 
 
 
-userRouter.get("/",middleware, async(req:any,res:any)=>{
-     return res.status(200).json({message : "Authorized User"});
+userRouter.get("/", middleware, async (req: any, res: any) => {
+    return res.status(200).json({ message: "Authorized User" });
 })
 
 userRouter.post('/signup', async (req: any, res: any) => {
@@ -33,7 +33,7 @@ userRouter.post('/signup', async (req: any, res: any) => {
                 password: bodyParser.data.password
             },
             select: {
-                id : true,
+                id: true,
                 email: true,
                 firstName: true,
                 lastName: true
@@ -42,17 +42,17 @@ userRouter.post('/signup', async (req: any, res: any) => {
         if (!isinsert) {
             return res.status(409).send("User not created ")
         }
- 
-        const token = jwt.sign({id : isinsert.id},JWT_SECRET)
+
+        const token = jwt.sign({ id: isinsert.id }, JWT_SECRET)
         return res.status(200).json({
             message: "User created successfully",
-            token ,
-            userInfo : {
-                email : isinsert.email,
-                firstName : isinsert.firstName,
-                lastName : isinsert.lastName
+            token,
+            userInfo: {
+                email: isinsert.email,
+                firstName: isinsert.firstName,
+                lastName: isinsert.lastName
             }
-            
+
         })
     } catch (e) {
         return res.status(500).send("Email already exist")
@@ -123,6 +123,28 @@ userRouter.post("/update", middleware, async (req: any, res: any) => {
         })
     }
 
+})
+
+userRouter.delete("/delete", middleware, async (req: any, res: any) => {
+    try {
+        await prisma.todo.deleteMany({
+            where: {
+                userId: req.id
+            }
+        })
+        await prisma.user.delete({
+            where: {
+                id: req.id
+            }
+        })
+        return res.status(200).json({
+            message: "Successfully Deleted the Account"
+        });
+    } catch (err) {
+        return res.status(400).json({
+            message: "User not exist"
+        })
+    }
 })
 
 
