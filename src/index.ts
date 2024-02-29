@@ -13,6 +13,10 @@ app.use(express.json());
 
 app.use("/api",mainRouter)
 
+app.get("/",function(req,res){
+    res.status(200).json("Request Recieved");
+})
+
 const port = process.env.PORT
 
 app.listen(port, () => {
